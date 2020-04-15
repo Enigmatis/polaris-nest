@@ -6,11 +6,11 @@ export class PolarisServerOptionsService {
   private readonly polarisServerOptions: PolarisServerOptions;
 
   constructor() {
-    this.polarisServerOptions = {
-      typeDefs: [], // BY ANNOTATION
-      resolvers: [], // BY ANNOTATION
-      port: 8080, //DEFAULT IN SEED
-    };
+     this.polarisServerOptions ={
+       typeDefs: [], // BY ANNOTATION
+       resolvers: [], // BY ANNOTATION
+       port: 8080, //DEFAULT IN SEED
+     };
   }
 
   getPolarisServerOptions(): PolarisServerOptions {

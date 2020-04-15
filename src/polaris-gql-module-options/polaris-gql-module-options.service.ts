@@ -21,8 +21,10 @@ import { GraphQLSchema } from "graphql";
 import { applyMiddleware } from "graphql-middleware";
 import { PolarisLoggerService } from "../polaris-logger/polaris-logger.service";
 import { PolarisServerConfigService } from "../polaris-server-config/polaris-server-config.service";
+import {PolarisServerOptionsService} from "../polaris-server-options/polaris-server-options.service";
 
 export const createGqlOptions = (
+    optionsService: PolarisServerOptionsService,
   configService: PolarisServerConfigService,
   loggerService: PolarisLoggerService
 ): Promise<GqlModuleOptions> | GqlModuleOptions => {
