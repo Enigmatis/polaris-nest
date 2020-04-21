@@ -1,5 +1,4 @@
-import { GqlModuleOptions, GqlOptionsFactory } from "@nestjs/graphql";
-import { PolarisServerConfig } from "@enigmatis/polaris-core/dist/src/config/polaris-server-config";
+import { GqlModuleOptions } from "@nestjs/graphql";
 import {
   PolarisGraphQLContext,
   ExpressContext,
@@ -7,6 +6,7 @@ import {
   createPlaygroundConfig,
   createIntrospectionConfig,
   polarisFormatError,
+  AbstractPolarisLogger,
 } from "@enigmatis/polaris-core";
 import {
   createPolarisContext,
@@ -21,32 +21,34 @@ import { GraphQLSchema } from "graphql";
 import { applyMiddleware } from "graphql-middleware";
 import { PolarisLoggerService } from "../polaris-logger/polaris-logger.service";
 import { PolarisServerConfigService } from "../polaris-server-config/polaris-server-config.service";
-import {PolarisServerOptionsService} from "../polaris-server-options/polaris-server-options.service";
+import { PolarisServerOptionsService } from "../polaris-server-options/polaris-server-options.service";
 
 export const createGqlOptions = (
-    optionsService: PolarisServerOptionsService,
+  optionsService: PolarisServerOptionsService,
   configService: PolarisServerConfigService,
   loggerService: PolarisLoggerService
 ): Promise<GqlModuleOptions> | GqlModuleOptions => {
   const config = configService.getPolarisServerConfig();
-  const logger = loggerService.getPolarisLogger(config) as unknown as PolarisGraphQLLogger;
-  console.log("config service:"+ configService);
-  console.log("logger service:"+ loggerService);
-  console.log("logger:"+ logger);
+  const logger = (loggerService.getPolarisLogger(
+    config
+  ) as unknown) as PolarisGraphQLLogger;
+  console.log("config service:" + configService);
+  console.log("logger service:" + loggerService);
+  console.log("logger:" + logger);
   const plugins: Array<
     ApolloServerPlugin | (() => ApolloServerPlugin)
   > = createPolarisPlugins(logger, config);
   const middlewares: any[] = createPolarisMiddlewares(config, logger);
   const context: (
     context: ExpressContext
-  ) => PolarisGraphQLContext = createPolarisContext(logger, config);
+  ) => PolarisGraphQLContext = createPolarisContext(logger as unknown as AbstractPolarisLogger, config);
   const subscriptions:
     | Partial<SubscriptionServerOptions>
     | string
     | false = createPolarisSubscriptionsConfig(config);
   const playground: PlaygroundConfig = createPlaygroundConfig(config);
   const introspection: boolean | undefined = createIntrospectionConfig(config);
-  const x= {
+  const x = {
     installSubscriptionHandlers: config.allowSubscription,
     autoSchemaFile: true,
     playground,

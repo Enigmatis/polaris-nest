@@ -11,7 +11,6 @@ export class TypeOrmOptionsFactoryService implements TypeOrmOptionsFactory {
       synchronize: true,
       logging: true,
       keepConnectionAlive: true
-     // schema: "recipes",
     };
   }
 }

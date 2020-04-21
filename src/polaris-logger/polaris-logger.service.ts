@@ -20,7 +20,7 @@ export class PolarisLoggerService implements LoggerService {
     if (!this.polarisLogger) {
       this.polarisLogger = createPolarisLoggerFromPolarisServerConfig(
         serverConfigService.getPolarisServerConfig()
-      ) as PolarisGraphQLLogger;
+      ) as unknown as PolarisGraphQLLogger;
     }
   }
   log(message: string) {
@@ -58,7 +58,7 @@ export class PolarisLoggerService implements LoggerService {
       this.polarisLogger ||
       (createPolarisLoggerFromPolarisServerConfig(
         serverConfigService
-      ) as PolarisGraphQLLogger);
+      ) as unknown as PolarisGraphQLLogger);
     return (this.polarisLogger as unknown) as AbstractPolarisLogger;
   }
 }
