@@ -9,8 +9,6 @@ import { TypeOrmCoreModule } from "./typeorm-core.module";
 import { DEFAULT_CONNECTION_NAME } from "./typeorm.constants";
 import { createTypeOrmProviders } from "./typeorm.providers";
 import { PolarisConnection } from "@enigmatis/polaris-typeorm";
-import { AbstractPolarisLogger } from "@enigmatis/polaris-logs";
-import { PolarisLoggerService } from "../polaris-logger/polaris-logger.service";
 
 @Module({})
 export class TypeOrmModule {

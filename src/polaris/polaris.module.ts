@@ -25,7 +25,7 @@ import { PolarisServerOptionsService } from "../polaris-server-options/polaris-s
     RoutesModule,
     GraphQLModule.forRootAsync({
       useFactory: createGqlOptions,
-      inject: [PolarisServerOptionsService, PolarisServerConfigService, PolarisLoggerService],
+      inject: [PolarisServerOptionsService, PolarisServerConfigService, PolarisLoggerService ],
       imports: [PolarisServerOptionsModule, PolarisServerConfigModule, PolarisLoggerModule],
     }),
     TypeOrmModule.forRootAsync({

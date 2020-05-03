@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PolarisServerOptions } from "@enigmatis/polaris-core";
+import {polarisGraphQLLogger} from "../../test/test-server/utils/logger";
 
 @Injectable()
 export class PolarisServerOptionsService {
@@ -10,6 +11,7 @@ export class PolarisServerOptionsService {
        typeDefs: [], // BY ANNOTATION
        resolvers: [], // BY ANNOTATION
        port: 8080, //DEFAULT IN SEED
+       logger: polarisGraphQLLogger
      };
   }
 

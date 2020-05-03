@@ -1,4 +1,4 @@
-import { Connection, ConnectionOptions } from "typeorm";
+import { ConnectionOptions } from "typeorm";
 import { PolarisConnection } from "@enigmatis/polaris-typeorm";
 
 type ConnectionToken = PolarisConnection | ConnectionOptions | string;

@@ -7,18 +7,14 @@ import {
   createIntrospectionConfig,
   polarisFormatError,
   AbstractPolarisLogger,
-} from "@enigmatis/polaris-core";
-import {
   createPolarisContext,
-  createPolarisMiddlewares,
   createPolarisPlugins,
-} from "@enigmatis/polaris-core/dist/src/config/create-apollo-config-util";
+  createPolarisSchemaWithMiddlewares,
+} from "@enigmatis/polaris-core";
 import { PolarisGraphQLLogger } from "@enigmatis/polaris-graphql-logger";
-import { ApolloServerPlugin } from "apollo-server-plugin-base";
 import { SubscriptionServerOptions } from "apollo-server-core/src/types";
 import { PlaygroundConfig } from "apollo-server";
 import { GraphQLSchema } from "graphql";
-import { applyMiddleware } from "graphql-middleware";
 import { PolarisLoggerService } from "../polaris-logger/polaris-logger.service";
 import { PolarisServerConfigService } from "../polaris-server-config/polaris-server-config.service";
 import { PolarisServerOptionsService } from "../polaris-server-options/polaris-server-options.service";
@@ -32,23 +28,21 @@ export const createGqlOptions = (
   const logger = (loggerService.getPolarisLogger(
     config
   ) as unknown) as PolarisGraphQLLogger;
-  console.log("config service:" + configService);
-  console.log("logger service:" + loggerService);
-  console.log("logger:" + logger);
-  const plugins: Array<
-    ApolloServerPlugin | (() => ApolloServerPlugin)
-  > = createPolarisPlugins(logger, config);
-  const middlewares: any[] = createPolarisMiddlewares(config, logger);
+  // @ts-ignore
+  const plugins = createPolarisPlugins(logger, config);
   const context: (
     context: ExpressContext
-  ) => PolarisGraphQLContext = createPolarisContext(logger as unknown as AbstractPolarisLogger, config);
+  ) => PolarisGraphQLContext = createPolarisContext(
+    (logger as unknown) as AbstractPolarisLogger,
+    config
+  );
   const subscriptions:
     | Partial<SubscriptionServerOptions>
     | string
     | false = createPolarisSubscriptionsConfig(config);
   const playground: PlaygroundConfig = createPlaygroundConfig(config);
   const introspection: boolean | undefined = createIntrospectionConfig(config);
-  const x = {
+  return {
     installSubscriptionHandlers: config.allowSubscription,
     autoSchemaFile: true,
     playground,
@@ -58,11 +52,9 @@ export const createGqlOptions = (
     introspection,
     formatError: polarisFormatError,
     transformSchema: (schema: GraphQLSchema) => {
-      return applyMiddleware(schema, ...middlewares);
+      return createPolarisSchemaWithMiddlewares(schema, logger, config);
     },
     path: config.applicationProperties.version,
     schemaDirectives: config.schemaDirectives,
   };
-  console.log(x);
-  return x;
 };
