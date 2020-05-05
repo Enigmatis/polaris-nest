@@ -12,18 +12,18 @@ import {Book} from "./book";
 export class BookResolver {
     constructor(private readonly bookService: BookService) {}
 
-    @Query((returns) => BookModel)
-    async allBooks(): Promise<BookModel[]> {
-        const books: BookModel[] = await this.bookService.findAll();
-        return books;
+    @Query((returns) => [BookModel])
+    async allBooks(): Promise<Book[]> {
+        return this.bookService.findAll();
     }
-    @Query((returns) => BookModel)
+    @Query((returns) => [BookModel])
     async allBooksWithWarnings(): Promise<Book[]> {
         return this.bookService.findAllWithWarnings();
     }
-    @Query((returns) => BookModel)
+    @Query((returns) => [BookModel])
     async bookByTitle(@Args("title") title: string): Promise<Book[]> {
-        return this.bookService.booksByTitle(title);
+        const books = await this.bookService.booksByTitle(title);
+        return books;
     }
 
     @Mutation((returns) => BookModel)

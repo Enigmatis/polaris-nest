@@ -6,7 +6,7 @@ import { Field, ObjectType } from "@nestjs/graphql";
   implements: [RepositoryEntity],
 })
 export class BookModel extends RepositoryEntity {
-  @Field({nullable:true})
+  @Field()
   title: String;
   @Field((type) => AuthorModel, { nullable: true })
   author: AuthorModel;
