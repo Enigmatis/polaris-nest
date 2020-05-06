@@ -1,5 +1,4 @@
-import { DynamicModule, Module } from "@nestjs/common";
-import { GraphQLModule } from "@nestjs/graphql";
+import { Module } from "@nestjs/common";
 import { RecipesModule } from "./recipes/recipes.module";
 import { PolarisEntitiesModule } from "./polaris-entities/polaris-entities.module";
 import { TypeOrmModule } from "./lib";
@@ -11,20 +10,19 @@ import { TypeOrmOptionsFactoryService } from "./type-orm-options-factory/type-or
 import { PolarisLoggerModule } from "./polaris-logger/polaris-logger.module";
 import { PolarisServerConfigModule } from "./polaris-server-config/polaris-server-config.module";
 import { RoutesModule } from "./routes/routes.module";
-import {RoutesService} from "./routes/routes.service";
-import { PolarisServerOptionsModule } from './polaris-server-options/polaris-server-options.module';
-import {PolarisServerOptionsService} from "./polaris-server-options/polaris-server-options.service";
+import { RoutesService } from "./routes/routes.service";
+import { PolarisGraphQLModule } from "./polaris-gql-module/polaris-gql-module";
 
 @Module({
   imports: [
     RecipesModule,
     PolarisServerConfigModule,
     PolarisLoggerModule,
-   //   PolarisServerOptionsModule,
-    GraphQLModule.forRootAsync({
+    // PolarisServerOptionsModule,
+    PolarisGraphQLModule.forRootAsync({
       useFactory: createGqlOptions,
       inject: [PolarisServerConfigService, PolarisLoggerService],
-     imports: [PolarisServerConfigModule,PolarisLoggerModule]
+      imports: [PolarisServerConfigModule, PolarisLoggerModule],
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmOptionsFactoryService,
@@ -34,7 +32,7 @@ import {PolarisServerOptionsService} from "./polaris-server-options/polaris-serv
     PolarisEntitiesModule,
     RoutesModule,
   ],
-  providers: [RoutesService, PolarisServerConfigService, PolarisLoggerModule],// PolarisServerOptionsService
+  providers: [RoutesService, PolarisServerConfigService, PolarisLoggerModule], // PolarisServerOptionsService
   controllers: [RoutesController],
 })
 export class AppModule {}

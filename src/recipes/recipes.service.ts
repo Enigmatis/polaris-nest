@@ -36,6 +36,17 @@ export class RecipesService {
     return this.recipeRepository.find(this.ctx);
   }
 
+  async findPaginated(startIndex: number, pageSize: number): Promise<Recipe[]> {
+    return this.recipeRepository.find(this.ctx, {
+      skip: startIndex,
+      take: pageSize,
+    });
+  }
+
+  async totalCount(): Promise<number> {
+    return this.recipeRepository.count(this.ctx);
+  }
+
   async remove(id: string): Promise<void> {
     await this.recipeRepository.delete(this.ctx, id);
   }

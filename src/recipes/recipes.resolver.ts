@@ -17,6 +17,7 @@ import { RecipesArgs } from "./dto/recipes.args";
 import { RecipeModel } from "./models/recipe.model";
 import { RecipesService } from "./recipes.service";
 import { Recipe } from "./recipe.entity";
+import { PaginatedResolver } from "@enigmatis/polaris-core";
 
 const pubSub = new PubSub();
 
@@ -36,6 +37,18 @@ export class RecipesResolver {
   @Query((returns) => [RecipeModel])
   recipes(@Args() recipesArgs: RecipesArgs): Promise<Recipe[]> {
     return this.recipesService.findAll(recipesArgs);
+  }
+
+  @Query((returns) => [RecipeModel])
+  async recipesPaginated(): Promise<PaginatedResolver<Recipe>> {
+    return {
+      getData: (startIndex?: number, pageSize?: number): Promise<Recipe[]> => {
+        return this.recipesService.findPaginated(startIndex, pageSize);
+      },
+      totalCount(): Promise<number> {
+        return this.recipesService.totalCount();
+      },
+    };
   }
 
   @Mutation((returns) => RecipeModel)
