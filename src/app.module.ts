@@ -4,7 +4,7 @@ import { PolarisEntitiesModule } from "./polaris-entities/polaris-entities.modul
 import { TypeOrmModule } from "./lib";
 import { RoutesController } from "./routes/routes.controller";
 import { PolarisLoggerService } from "./polaris-logger/polaris-logger.service";
-import { createGqlOptions } from "./polaris-gql-module-options/polaris-gql-module-options.service";
+import { GqlOptionsService } from "./polaris-gql-module-options/polaris-gql-module-options.service";
 import { PolarisServerConfigService } from "./polaris-server-config/polaris-server-config.service";
 import { TypeOrmOptionsFactoryService } from "./type-orm-options-factory/type-orm-options-factory.service";
 import { PolarisLoggerModule } from "./polaris-logger/polaris-logger.module";
@@ -12,6 +12,7 @@ import { PolarisServerConfigModule } from "./polaris-server-config/polaris-serve
 import { RoutesModule } from "./routes/routes.module";
 import { RoutesService } from "./routes/routes.service";
 import { PolarisGraphQLModule } from "./polaris-gql-module/polaris-gql-module";
+import { GqlOptionsModule } from "./polaris-gql-module-options/polaris-gql-module-options.module";
 
 @Module({
   imports: [
@@ -20,9 +21,17 @@ import { PolarisGraphQLModule } from "./polaris-gql-module/polaris-gql-module";
     PolarisLoggerModule,
     // PolarisServerOptionsModule,
     PolarisGraphQLModule.forRootAsync({
-      useFactory: createGqlOptions,
-      inject: [PolarisServerConfigService, PolarisLoggerService],
-      imports: [PolarisServerConfigModule, PolarisLoggerModule],
+      useClass: GqlOptionsService,
+      inject: [
+        PolarisServerConfigService,
+        PolarisLoggerService,
+        GqlOptionsService,
+      ],
+      imports: [
+        PolarisServerConfigModule,
+        PolarisLoggerModule,
+        GqlOptionsModule,
+      ],
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmOptionsFactoryService,
@@ -31,8 +40,14 @@ import { PolarisGraphQLModule } from "./polaris-gql-module/polaris-gql-module";
     }),
     PolarisEntitiesModule,
     RoutesModule,
+    GqlOptionsModule,
   ],
-  providers: [RoutesService, PolarisServerConfigService, PolarisLoggerModule], // PolarisServerOptionsService
+  providers: [
+    RoutesService,
+    PolarisServerConfigService,
+    PolarisLoggerService,
+    GqlOptionsService,
+  ], // PolarisServerOptionsService
   controllers: [RoutesController],
 })
 export class AppModule {}

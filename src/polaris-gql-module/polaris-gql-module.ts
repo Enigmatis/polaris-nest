@@ -1,49 +1,44 @@
 import {
-  GqlModuleOptions,
   GraphQLFactory,
   GraphQLModule,
   GraphQLTypesLoader,
-  GraphQLAstExplorer,
 } from "@nestjs/graphql";
-import {
-  ApplicationConfig,
-  HttpAdapterHost,
-  MetadataScanner,
-} from "@nestjs/core";
+import { ApplicationConfig, HttpAdapterHost } from "@nestjs/core";
 import { Inject, Module } from "@nestjs/common";
 import { PolarisServerConfigService } from "../polaris-server-config/polaris-server-config.service";
 import { PolarisLoggerService } from "../polaris-logger/polaris-logger.service";
 import { initSnapshotGraphQLOptions } from "@enigmatis/polaris-core";
 import { PolarisGraphQLLogger } from "@enigmatis/polaris-graphql-logger";
-import { RecipesModule } from "../recipes/recipes.module";
-import {
-  PluginsExplorerService,
-  ResolversExplorerService,
-  ScalarsExplorerService,
-} from "@nestjs/graphql/dist/services";
-import { GraphQLSchemaBuilder } from "@nestjs/graphql/dist/graphql-schema-builder";
+import { GqlOptionsService } from "../polaris-gql-module-options/polaris-gql-module-options.service";
+import { PolarisServerConfigModule } from "../polaris-server-config/polaris-server-config.module";
+import { PolarisLoggerModule } from "../polaris-logger/polaris-logger.module";
+import { GqlOptionsModule } from "../polaris-gql-module-options/polaris-gql-module-options.module";
 
-const CONFIG_SERVICE = "PolarisServerConfigService";
-const LOGGER_SERVICE = "PolarisLoggerService";
-
-@Module({})
+@Module({
+  imports: [PolarisServerConfigModule, PolarisLoggerModule],
+  providers: [PolarisServerConfigService, PolarisLoggerService],
+})
 export class PolarisGraphQLModule extends GraphQLModule {
   constructor(
     httpAdapterHost: HttpAdapterHost,
-    options: GqlModuleOptions,
+    // @Inject() gqlOptionsService: GqlOptionsService,
     graphqlFactory: GraphQLFactory,
     graphqlTypesLoader: GraphQLTypesLoader,
     applicationConfig: ApplicationConfig,
-    @Inject(CONFIG_SERVICE)
+    @Inject()
     private readonly configService: PolarisServerConfigService,
-    @Inject(LOGGER_SERVICE) private readonly loggerService: PolarisLoggerService
+    @Inject() private readonly loggerService: PolarisLoggerService
   ) {
     super(
       httpAdapterHost,
-      options,
+      // gqlOptionsService.createGqlOptions(),
+      {},
       graphqlFactory,
       graphqlTypesLoader,
       applicationConfig
+    );
+    console.log(
+      "================================check================================"
     );
   }
 
