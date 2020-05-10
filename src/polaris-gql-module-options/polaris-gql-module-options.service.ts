@@ -28,7 +28,6 @@ export const createGqlOptions = (
   const logger = (loggerService.getPolarisLogger(
     config
   ) as unknown) as PolarisGraphQLLogger;
-  // @ts-ignore
   const plugins = createPolarisPlugins(logger, config);
   const context: (
     context: ExpressContext

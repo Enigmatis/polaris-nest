@@ -26,7 +26,7 @@ export type TypeOrmModuleOptions = {
 export interface TypeOrmOptionsFactory {
   createTypeOrmOptions(
     connectionName?: string
-  ): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions| Promise<TypeOrmModuleOptions[]> | TypeOrmModuleOptions[];
+  ): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
 }
 
 export interface TypeOrmModuleAsyncOptions

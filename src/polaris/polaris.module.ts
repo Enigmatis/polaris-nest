@@ -28,11 +28,6 @@ import { PolarisServerOptionsService } from "../polaris-server-options/polaris-s
       inject: [PolarisServerOptionsService, PolarisServerConfigService, PolarisLoggerService ],
       imports: [PolarisServerOptionsModule, PolarisServerConfigModule, PolarisLoggerModule],
     }),
-    TypeOrmModule.forRootAsync({
-      useClass: TypeOrmOptionsFactoryService,
-      inject: [PolarisLoggerService],
-      imports: [PolarisLoggerModule],
-    }),
   ],
   providers: [
     RoutesService,
