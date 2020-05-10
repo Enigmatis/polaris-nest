@@ -16,7 +16,7 @@ export class BookService {
     constructor(
         @InjectRepository(Book)
         private readonly bookRepository: PolarisRepository<Book>,
-        @InjectConnection()
+        @InjectConnection("chen")
         private readonly connection: PolarisConnection,
         @Inject(CONTEXT) private readonly ctx: PolarisGraphQLContext
     ) {}
