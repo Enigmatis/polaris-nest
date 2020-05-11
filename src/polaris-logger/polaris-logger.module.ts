@@ -7,5 +7,4 @@ import { PolarisServerConfigModule } from "../polaris-server-config/polaris-serv
   providers: [PolarisLoggerService],
   exports: [PolarisLoggerService],
 })
-export class PolarisLoggerModule {
-}
+export class PolarisLoggerModule {}

@@ -16,18 +16,10 @@ import {
   getConnectionToken,
   getEntityManagerToken,
   handleRetry,
-} from "./common/typeorm.utils";
-import { EntitiesMetadataStorage } from "./entities-metadata.storage";
-import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
   TypeOrmOptionsFactory,
-} from "./interfaces/typeorm-options.interface";
-import {
-  DEFAULT_CONNECTION_NAME,
-  TYPEORM_MODULE_ID,
-  TYPEORM_MODULE_OPTIONS,
-} from "./typeorm.constants";
+} from "@nestjs/typeorm";
 import {
   createPolarisConnection,
   getPolarisConnectionManager,
@@ -35,6 +27,12 @@ import {
 } from "@enigmatis/polaris-typeorm";
 import { PolarisLogger } from "@enigmatis/polaris-logs";
 import { PolarisLoggerService } from "../polaris-logger/polaris-logger.service";
+import {
+  DEFAULT_CONNECTION_NAME,
+  TYPEORM_MODULE_ID,
+  TYPEORM_MODULE_OPTIONS,
+} from "@nestjs/typeorm/dist/typeorm.constants";
+import { EntitiesMetadataStorage } from "@nestjs/typeorm/dist/entities-metadata.storage";
 
 @Global()
 @Module({})

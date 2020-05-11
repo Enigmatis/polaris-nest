@@ -18,9 +18,9 @@ export class PolarisLoggerService implements LoggerService {
     private readonly serverConfigService: PolarisServerConfigService
   ) {
     if (!this.polarisLogger) {
-      this.polarisLogger = createPolarisLoggerFromPolarisServerConfig(
+      this.polarisLogger = (createPolarisLoggerFromPolarisServerConfig(
         serverConfigService.getPolarisServerConfig()
-      ) as unknown as PolarisGraphQLLogger;
+      ) as unknown) as PolarisGraphQLLogger;
     }
   }
   log(message: string) {
@@ -56,9 +56,9 @@ export class PolarisLoggerService implements LoggerService {
   ): AbstractPolarisLogger {
     this.polarisLogger =
       this.polarisLogger ||
-      (createPolarisLoggerFromPolarisServerConfig(
+      ((createPolarisLoggerFromPolarisServerConfig(
         serverConfigService
-      ) as unknown as PolarisGraphQLLogger);
+      ) as unknown) as PolarisGraphQLLogger);
     return (this.polarisLogger as unknown) as AbstractPolarisLogger;
   }
 }

@@ -1,9 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import {ExpressContext, PolarisServerOptions, RealitiesHolder} from "@enigmatis/polaris-core";
+import {
+  ExpressContext,
+  PolarisServerOptions,
+  RealitiesHolder,
+} from "@enigmatis/polaris-core";
 import { polarisGraphQLLogger } from "../../test/test-server/utils/logger";
-import {TestContext} from "../../test/test-server/context/test-context";
-import * as customContextFields from '../../test/test-server/constants/custom-context-fields.json';
-import {TestClassInContext} from "../../test/test-server/context/test-class-in-context";
+import { TestContext } from "../../test/test-server/context/test-context";
+import * as customContextFields from "../../test/test-server/constants/custom-context-fields.json";
+import { TestClassInContext } from "../../test/test-server/context/test-class-in-context";
 
 @Injectable()
 export class PolarisServerOptionsService {
@@ -18,20 +22,20 @@ export class PolarisServerOptionsService {
       supportedRealities: new RealitiesHolder(
         new Map([[3, { id: 3, type: "notreal3", name: "three" }]])
       ),
-      customContext:(context: ExpressContext): Partial<TestContext> => {
+      customContext: (context: ExpressContext): Partial<TestContext> => {
         const { req, connection } = context;
         const headers = req ? req.headers : connection?.context;
 
         return {
           customField: customContextFields.customField,
           instanceInContext: new TestClassInContext(
-              customContextFields.instanceInContext.someProperty,
+            customContextFields.instanceInContext.someProperty
           ),
           requestHeaders: {
-            customHeader: headers['custom-header'],
+            customHeader: headers["custom-header"],
           },
         };
-      }
+      },
     };
   }
 

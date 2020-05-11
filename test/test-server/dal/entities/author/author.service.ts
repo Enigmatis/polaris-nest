@@ -1,12 +1,12 @@
 import { Inject, Injectable, Scope } from "@nestjs/common";
-import { InjectConnection, InjectRepository } from "../../../../../src";
 import {
   PolarisConnection,
   PolarisRepository,
 } from "@enigmatis/polaris-typeorm";
 import { CONTEXT } from "@nestjs/graphql";
 import { PolarisGraphQLContext } from "@enigmatis/polaris-core";
-import {Author} from "./author";
+import { Author } from "./author";
+import { InjectConnection, InjectRepository } from "@nestjs/typeorm";
 
 @Injectable({ scope: Scope.REQUEST })
 export class AuthorService {
@@ -18,9 +18,12 @@ export class AuthorService {
     @Inject(CONTEXT) private readonly ctx: PolarisGraphQLContext
   ) {}
 
-  async create(firstName:string,lastName:string): Promise<Author | Author> {
+  async create(firstName: string, lastName: string): Promise<Author | Author> {
     const author = new Author(firstName, lastName);
-    return await this.authorRepository.save(this.ctx, author) as unknown as Promise<Author | Author>;
+    return ((await this.authorRepository.save(
+      this.ctx,
+      author
+    )) as unknown) as Promise<Author | Author>;
   }
 
   async findOneById(id: string): Promise<Author> {

@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
-import {PolarisServerOptionsService} from "./polaris-server-options.service";
+import { Module } from "@nestjs/common";
+import { PolarisServerOptionsService } from "./polaris-server-options.service";
 
 @Module({
-    providers: [PolarisServerOptionsService],
-    exports: [PolarisServerOptionsService],})
+  providers: [PolarisServerOptionsService],
+  exports: [PolarisServerOptionsService],
+})
 export class PolarisServerOptionsModule {}

@@ -7,5 +7,4 @@ import { PolarisServerOptionsModule } from "../polaris-server-options/polaris-se
   providers: [PolarisServerConfigService],
   exports: [PolarisServerConfigService],
 })
-export class PolarisServerConfigModule {
-}
+export class PolarisServerConfigModule {}
