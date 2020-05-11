@@ -13,7 +13,7 @@ export class AuthorService {
   constructor(
     @InjectRepository(Author)
     private readonly authorRepository: PolarisRepository<Author>,
-    @InjectConnection("chen")
+    @InjectConnection()
     private readonly connection: PolarisConnection,
     @Inject(CONTEXT) private readonly ctx: PolarisGraphQLContext
   ) {}

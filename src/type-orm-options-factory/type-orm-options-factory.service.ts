@@ -11,7 +11,7 @@ export class TypeOrmOptionsFactoryService implements TypeOrmOptionsFactory {
       username: "vulcan_usr@galileo-dbs",
       password: "vulcan_usr123",
       host: "galileo-dbs.postgres.database.azure.com",
-      schema: connectionName,
+      schema: "chen",
       dropSchema: true,
       autoLoadEntities: true,
       synchronize: true,

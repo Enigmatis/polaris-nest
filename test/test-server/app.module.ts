@@ -10,17 +10,10 @@ import {PolarisLoggerModule} from "../../src/polaris-logger/polaris-logger.modul
 @Module({
   imports: [AuthorModule, BookModule, PolarisModule,
     TypeOrmModule.forRootAsync({
-      name: "chen",
       useClass: TypeOrmOptionsFactoryService,
       inject: [PolarisLoggerService],
       imports: [PolarisLoggerModule],
-    }),
-    // TypeOrmModule.forRootAsync({
-    //   name: "recipes",
-    //   useClass: TypeOrmOptionsFactoryService,
-    //   inject: [PolarisLoggerService],
-    //   imports: [PolarisLoggerModule],
-    // })
+    })
   ],
 })
 export class AppModule {}
