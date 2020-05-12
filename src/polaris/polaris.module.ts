@@ -9,9 +9,6 @@ import { PolarisServerConfigModule } from "../polaris-server-config/polaris-serv
 import { PolarisLoggerService } from "../polaris-logger/polaris-logger.service";
 import { RoutesController } from "../routes/routes.controller";
 
-@Module({})
-export class PolarisServerOptionsModule {}
-
 @Module({
   imports: [
     PolarisServerConfigModule,
@@ -20,7 +17,6 @@ export class PolarisServerOptionsModule {}
     GraphQLModule.forRootAsync({
       useClass: GqlOptionsFactoryService,
       imports: [
-        PolarisServerOptionsModule,
         PolarisServerConfigModule,
         PolarisLoggerModule,
      ],

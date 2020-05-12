@@ -1,11 +1,23 @@
-import { Injectable } from "@nestjs/common";
+import {Injectable, Type} from "@nestjs/common";
 import { PolarisServerConfig } from "@enigmatis/polaris-core/dist/src/config/polaris-server-config";
 import { getPolarisServerConfigFromOptions } from "@enigmatis/polaris-core/dist/src/server/configurations-manager";
 import { polarisGraphQLLogger } from "../../test/test-server/utils/logger";
-import { ExpressContext, RealitiesHolder } from "@enigmatis/polaris-core";
+import {ExpressContext, PolarisServerOptions, RealitiesHolder} from "@enigmatis/polaris-core";
 import { TestContext } from "../../test/test-server/context/test-context";
 import * as customContextFields from "../../test/test-server/constants/custom-context-fields.json";
 import { TestClassInContext } from "../../test/test-server/context/test-class-in-context";
+import {ModuleMetadata} from "@nestjs/common/interfaces";
+
+export interface PolarisServerOptionsFactory {
+  createTypeOrmOptions(connectionName?: string): Promise<PolarisServerOptions> | PolarisServerOptions;
+}
+export interface PolarisServerConfigAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
+  name?: string;
+  useExisting?: Type<PolarisServerOptionsFactory>;
+  useClass?: Type<PolarisServerOptionsFactory>;
+  useFactory?: (...args: any[]) => Promise<PolarisServerOptions> | PolarisServerOptions;
+  inject?: any[];
+}
 
 @Injectable()
 export class PolarisServerConfigService {
