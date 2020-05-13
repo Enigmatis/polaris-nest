@@ -1,14 +1,17 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { PolarisServerConfig } from "@enigmatis/polaris-core/dist/src/config/polaris-server-config";
 import { getPolarisServerConfigFromOptions } from "@enigmatis/polaris-core/dist/src/server/configurations-manager";
-
-import {options} from "../../test/test-server/polaris-server-options-factory/polaris-server-options-factory-service";
+import { PolarisServerOptionsToken } from "../common/constants";
+import { PolarisServerOptions } from "@enigmatis/polaris-core";
 
 @Injectable()
 export class PolarisServerConfigService {
   private readonly polarisServerConfig: PolarisServerConfig;
 
-  constructor() {
+  constructor(
+    @Inject(PolarisServerOptionsToken)
+    private options: PolarisServerOptions
+  ) {
     this.polarisServerConfig = getPolarisServerConfigFromOptions(options);
   }
 
