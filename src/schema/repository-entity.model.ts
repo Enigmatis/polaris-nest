@@ -1,4 +1,4 @@
-import { Field, ID, InterfaceType, ObjectType } from "@nestjs/graphql";
+import { Field, ID, InterfaceType } from "@nestjs/graphql";
 
 @InterfaceType()
 export abstract class RepositoryEntity {

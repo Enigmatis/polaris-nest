@@ -7,12 +7,17 @@ import { PolarisLoggerService } from "../../src/polaris-logger/polaris-logger.se
 import { PolarisLoggerModule } from "../../src/polaris-logger/polaris-logger.module";
 import { TypeOrmModule } from "../../src/typeorm/typeorm.module";
 import { DataInitializationModule } from "./dal/data-initialization/data-initialization.module";
+import { options } from "./polaris-server-options-factory/polaris-server-options-factory-service";
 
 @Module({
   imports: [
     AuthorModule,
     BookModule,
-    PolarisModule,
+    PolarisModule.registerAsync({
+      useFactory: () => {
+        return options;
+      },
+    }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmOptionsFactoryService,
       inject: [PolarisLoggerService],
