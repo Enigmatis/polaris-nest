@@ -31,7 +31,7 @@ export class GqlOptionsFactoryService implements GqlOptionsFactory {
     const logger: PolarisGraphQLLogger = (this.loggerService.getPolarisLogger(
       config
     ) as unknown) as PolarisGraphQLLogger;
-    const plugins = createPolarisPlugins(logger, config);
+    const plugins = createPolarisPlugins(logger as any, config);
     const context: (
       context: ExpressContext
     ) => PolarisGraphQLContext = createPolarisContext(
@@ -50,13 +50,13 @@ export class GqlOptionsFactoryService implements GqlOptionsFactory {
       installSubscriptionHandlers: config.allowSubscription,
       autoSchemaFile: true,
       playground,
-      plugins,
+      plugins: plugins as any,
       context,
       subscriptions,
       introspection,
       formatError: polarisFormatError,
       transformSchema: (schema: GraphQLSchema) => {
-        return createPolarisSchemaWithMiddlewares(schema, logger, config);
+        return createPolarisSchemaWithMiddlewares(schema, logger as any, config);
       },
       path: config?.applicationProperties?.version,
       schemaDirectives: config?.schemaDirectives,

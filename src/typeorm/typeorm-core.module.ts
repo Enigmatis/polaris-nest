@@ -193,13 +193,13 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       if (!options.type) {
         return createPolarisConnection(
           options as ConnectionOptions,
-          polarisLogger
+          polarisLogger as any
         );
       }
       if (!options.autoLoadEntities) {
         return createPolarisConnection(
           options as ConnectionOptions,
-          polarisLogger
+          polarisLogger as any
         );
       }
 
@@ -219,7 +219,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
           ...options,
           entities,
         } as ConnectionOptions,
-        polarisLogger
+        polarisLogger as any
       );
     })
       .pipe(handleRetry(options.retryAttempts, options.retryDelay))

@@ -5,14 +5,16 @@ import * as initData from "../integration-tests/jsonRequestsAndHeaders/initData.
 
 export async function startTestServer(): Promise<void> {
   await bootstrap();
+  if (getPolarisConnectionManager().connections.length > 0) {
+    let manager = getPolarisConnectionManager();
+    for (let connection of manager.connections) {
+      await connection.close();
+    }
+    Object.assign(manager, {connections:[]});
+  }
   await graphQLRequest(initData.request, initData.headers);
 }
 
 export async function stopTestServer(): Promise<void> {
   await app.close();
-  if (getPolarisConnectionManager().connections.length > 0) {
-    for (let connection of getPolarisConnectionManager().connections) {
-      await connection.close();
-    }
-  }
 }

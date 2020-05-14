@@ -24,4 +24,6 @@ export class TypeOrmOptionsFactoryService implements TypeOrmOptionsFactory {
 
 //npm i sqlite3@npm:sqlite3-offline
 //
+// "sqlite3": "npm:sqlite3-offline@^4.3.0",
+//     "sqlite3-offline": "4.3.0",
 // const sqliteConnectionOptions: TypeOrmModuleOptions =

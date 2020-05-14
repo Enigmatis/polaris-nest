@@ -1,16 +1,16 @@
 import {polarisGraphQLLogger} from "../utils/logger";
-import {ExpressContext, RealitiesHolder} from "@enigmatis/polaris-core";
+import {ExpressContext, PolarisServerOptions, RealitiesHolder} from "@enigmatis/polaris-core";
 import {TestContext} from "../context/test-context";
 import {TestClassInContext} from "../context/test-class-in-context";
 import * as customContextFields from "../constants/custom-context-fields.json";
 
-export const options = {
+export const options: PolarisServerOptions = {
     typeDefs: [], // BY ANNOTATION
     resolvers: [], // BY ANNOTATION
     port: 8080, //DEFAULT IN SEED
     logger: polarisGraphQLLogger,
     supportedRealities: new RealitiesHolder(
-        new Map([[3, { id: 3, type: "notreal3", name: "three" }]])
+        new Map([[3, { id: 3, type: "notreal3", name: "default" }]])
     ),
     customContext: (context: ExpressContext): Partial<TestContext> => {
         const { req, connection } = context;
