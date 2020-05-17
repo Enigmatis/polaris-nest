@@ -8,13 +8,17 @@ import {
 import { CONTEXT } from "@nestjs/graphql";
 import { Book } from "../../dal/models/book";
 import { InjectRepository } from "@nestjs/typeorm";
+import { PubSubEngine } from "graphql-subscriptions";
+
+const BOOK_UPDATED = "BOOK_UPDATED";
 
 @Injectable({ scope: Scope.REQUEST })
 export class BookService {
   constructor(
     @InjectRepository(Book)
     private readonly bookRepository: PolarisRepository<Book>,
-    @Inject(CONTEXT) private readonly ctx: PolarisGraphQLContext
+    @Inject(CONTEXT) private readonly ctx: PolarisGraphQLContext,
+    @Inject("PUB_SUB") private pubSub: PubSubEngine
   ) {}
 
   async findAll(): Promise<any[]> {
@@ -40,6 +44,9 @@ export class BookService {
     const result: Book[] = await this.bookRepository.find(this.ctx, {
       where: { title: Like(`%${title}%`) },
     });
+    result.forEach((book) =>
+      this.pubSub.publish(BOOK_UPDATED, { bookUpdated: book })
+    );
 
     result.forEach((book) => (book.title = newTitle));
     return this.bookRepository.save(this.ctx, result);
@@ -53,5 +60,9 @@ export class BookService {
       result.affected !== undefined &&
       result.affected > 0
     );
+  }
+
+  registerToBookUpdates() {
+    return this.pubSub.asyncIterator([BOOK_UPDATED]);
   }
 }

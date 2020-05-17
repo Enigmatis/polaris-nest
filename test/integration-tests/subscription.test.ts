@@ -1,5 +1,9 @@
 import * as polarisProperties from "../test-server/resources/polaris-properties.json";
-import { startTestServer, stopTestServer } from "../test-server/test-server";
+import {
+  setConfiguration,
+  startTestServer,
+  stopTestServer,
+} from "../test-server/test-server";
 import { graphQLRequest } from "../test-server/utils/graphql-client";
 import { WebsocketClient } from "../test-server/utils/websocket-client";
 import { PolarisServerOptions } from "@enigmatis/polaris-core";
@@ -12,8 +16,8 @@ beforeEach(async () => {
   const subscriptionConfig: Partial<PolarisServerOptions> = {
     allowSubscription: true,
   };
+  setConfiguration(subscriptionConfig);
   await startTestServer();
-  //    subscriptionConfig
   wsClient = new WebsocketClient(SUBSCRIPTION_ENDPOINT);
 });
 
@@ -22,13 +26,14 @@ afterEach(async () => {
   await stopTestServer();
 });
 
+
 describe("subscription tests", () => {
   test("subscribing to book updates, and receiving a message once a book was updated", async () => {
     const title = "Book1";
     const newTitle = "Just a Title";
-
-    await wsClient.send(
-      `
+    await wsClient.subscriptionClient.onConnected(async () => {
+      await wsClient.send(
+        `
                 subscription {
                     bookUpdated {
                         id
@@ -36,9 +41,9 @@ describe("subscription tests", () => {
                     }
                 }
             `
-    );
-    await graphQLRequest(
-      `
+      );
+      await graphQLRequest(
+        `
                 mutation($title: String!, $newTitle: String!) {
                    updateBooksByTitle(title: $title, newTitle: $newTitle) {
                         id
@@ -46,10 +51,11 @@ describe("subscription tests", () => {
                     }
                 }
             `,
-      {},
-      { title, newTitle }
-    );
+        {},
+        { title, newTitle }
+      );
 
-    expect(wsClient.receivedMessages[0].bookUpdated.title).toBe(newTitle);
+      expect(wsClient.receivedMessages[0].bookUpdated.title).toBe(newTitle);
+    });
   });
 });

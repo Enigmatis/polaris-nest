@@ -7,14 +7,15 @@ import { PolarisLoggerService } from "../../src/polaris-logger/polaris-logger.se
 import { PolarisLoggerModule } from "../../src/polaris-logger/polaris-logger.module";
 import { TypeOrmModule } from "../../src/typeorm/typeorm.module";
 import { DataInitializationModule } from "./graphql/modules/data-initialization.module";
-import { createOptions } from "./polaris-server-options-factory/polaris-server-options-factory-service";
+import { createOptionsFactory } from "./polaris-server-options-factory/polaris-server-options-factory-service";
+import {PubSub} from "graphql-subscriptions";
 
 @Module({
   imports: [
     AuthorModule,
     BookModule,
     PolarisModule.registerAsync({
-      useFactory: createOptions,
+      useFactory: createOptionsFactory,
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmOptionsFactoryService,
@@ -22,6 +23,6 @@ import { createOptions } from "./polaris-server-options-factory/polaris-server-o
       imports: [PolarisLoggerModule],
     }),
     DataInitializationModule,
-  ],
+  ]
 })
 export class AppModule {}

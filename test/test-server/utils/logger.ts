@@ -4,7 +4,7 @@ import {
 } from "@enigmatis/polaris-core";
 
 export const loggerConfig: LoggerConfiguration = {
-  loggerLevel: "debug",
+  loggerLevel: "info",
   writeToConsole: true,
   writeFullMessageToConsole: false,
 };

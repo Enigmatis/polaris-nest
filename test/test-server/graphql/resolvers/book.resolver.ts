@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Query, Resolver, Subscription } from "@nestjs/graphql";
 import { BookService } from "../services/book.service";
 import { Book } from "../../dal/models/book";
 import * as BookApi from "../entities/book";
@@ -21,16 +21,21 @@ export class BookResolver {
     return books;
   }
 
-  @Mutation((returns) => BookApi.Book)
+  @Mutation((returns) => [BookApi.Book])
   async updateBooksByTitle(
     @Args("title") title: string,
     @Args("newTitle") newTitle: string
   ): Promise<Book[] | Book> {
-    return await this.bookService.updateBooksByTitle(title, newTitle);
+    return this.bookService.updateBooksByTitle(title, newTitle);
   }
 
   @Mutation((returns) => Boolean)
   async deleteBook(@Args("id") id: string) {
     return this.bookService.remove(id);
+  }
+  @Subscription(() => BookApi.Book)
+  bookUpdated() {
+    console.log("registered!!!!!!!!!!!!!!!!!")
+    return this.bookService.registerToBookUpdates();
   }
 }

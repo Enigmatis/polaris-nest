@@ -1,9 +1,11 @@
-import { startTestServer, stopTestServer } from "../test-server/test-server";
+import {
+  setConfiguration,
+  startTestServer,
+  stopTestServer,
+} from "../test-server/test-server";
 import { graphqlRawRequest } from "../test-server/utils/graphql-client";
 import * as booksWithWarnings from "./jsonRequestsAndHeaders/queryForBooksWithWarnings.json";
 import { PolarisServerOptions } from "@enigmatis/polaris-core";
-import { createOptions } from "../test-server/polaris-server-options-factory/polaris-server-options-factory-service";
-import * as optionsModule from "../test-server/polaris-server-options-factory/polaris-server-options-factory-service";
 
 describe("warnings disabled tests", () => {
   describe("shouldAddWarningsToExtensions is false", () => {
@@ -11,12 +13,7 @@ describe("warnings disabled tests", () => {
       const warningConfig: Partial<PolarisServerOptions> = {
         shouldAddWarningsToExtensions: false,
       };
-      let polarisServerOptions: PolarisServerOptions = createOptions();
-      polarisServerOptions = { ...polarisServerOptions, ...warningConfig };
-      jest
-        .spyOn(optionsModule, "createOptions")
-        .mockImplementation(() => polarisServerOptions);
-      let x = optionsModule.createOptions();
+      setConfiguration(warningConfig);
       await startTestServer();
     });
 

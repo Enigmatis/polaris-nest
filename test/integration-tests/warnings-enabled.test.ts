@@ -1,16 +1,11 @@
 import { startTestServer, stopTestServer } from "../test-server/test-server";
 import { graphqlRawRequest } from "../test-server/utils/graphql-client";
 import * as booksWithWarnings from "./jsonRequestsAndHeaders/queryForBooksWithWarnings.json";
-import { PolarisServerOptions } from "@enigmatis/polaris-core";
 
 describe("warnings enabled tests", () => {
   describe("shouldAddWarningsToExtensions is true", () => {
     beforeEach(async () => {
-      const warningConfig: Partial<PolarisServerOptions> = {
-        shouldAddWarningsToExtensions: true,
-      };
       await startTestServer();
-      //    warningConfig
     });
 
     afterEach(async () => {
