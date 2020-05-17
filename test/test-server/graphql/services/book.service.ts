@@ -1,33 +1,27 @@
 import { Inject, Injectable, Scope } from "@nestjs/common";
 import {
+  DeleteResult,
   Like,
-  PolarisConnection,
   PolarisRepository,
-} from "@enigmatis/polaris-typeorm";
+  PolarisGraphQLContext,
+} from "@enigmatis/polaris-core";
 import { CONTEXT } from "@nestjs/graphql";
-import { PolarisGraphQLContext } from "@enigmatis/polaris-core";
-import { Book } from "./book";
-import { InjectConnection, InjectRepository } from "@nestjs/typeorm";
+import { Book } from "../../dal/models/book";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable({ scope: Scope.REQUEST })
 export class BookService {
   constructor(
     @InjectRepository(Book)
     private readonly bookRepository: PolarisRepository<Book>,
-    @InjectConnection()
-    private readonly connection: PolarisConnection,
     @Inject(CONTEXT) private readonly ctx: PolarisGraphQLContext
   ) {}
 
   async findAll(): Promise<any[]> {
-    const c = await this.connection
-      .getRepository(Book)
-      .find(this.ctx, { relations: ["author"] });
     return this.bookRepository.find(this.ctx, { relations: ["author"] });
   }
 
   async findAllWithWarnings(): Promise<Book[]> {
-    const c = await this.connection.getRepository(Book).find(this.ctx);
     this.ctx.returnedExtensions.warnings = ["warning 1", "warning 2"];
     return this.bookRepository.find(this.ctx, { relations: ["author"] });
   }
@@ -51,7 +45,13 @@ export class BookService {
     return this.bookRepository.save(this.ctx, result);
   }
 
-  async remove(id: string): Promise<void> {
-    await this.bookRepository.delete(this.ctx, id);
+  async remove(id: string): Promise<boolean> {
+    const result: DeleteResult = await this.bookRepository.delete(this.ctx, id);
+    return (
+      result &&
+      result.affected !== null &&
+      result.affected !== undefined &&
+      result.affected > 0
+    );
   }
 }

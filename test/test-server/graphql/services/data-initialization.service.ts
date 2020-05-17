@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { PolarisRepository } from "@enigmatis/polaris-typeorm";
 import { PolarisGraphQLContext } from "@enigmatis/polaris-core";
-import { Book } from "../entities/book/book";
-import { Author } from "../entities/author/author";
+import { Book } from "../../dal/models/book";
+import { Author } from "../../dal/models/author";
 import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()

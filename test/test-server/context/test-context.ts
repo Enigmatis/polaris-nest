@@ -1,12 +1,15 @@
-import { TestClassInContext } from './test-class-in-context';
-import { PolarisRequestHeaders, PolarisGraphQLContext } from '@enigmatis/polaris-core';
+import { TestClassInContext } from "./test-class-in-context";
+import {
+  PolarisRequestHeaders,
+  PolarisGraphQLContext,
+} from "@enigmatis/polaris-core";
 
 interface TestRequestHeaders extends PolarisRequestHeaders {
-    customHeader?: string | string[];
+  customHeader?: string | string[];
 }
 
 export interface TestContext extends PolarisGraphQLContext {
-    customField: number;
-    requestHeaders: TestRequestHeaders;
-    instanceInContext: TestClassInContext;
+  customField: number;
+  requestHeaders: TestRequestHeaders;
+  instanceInContext: TestClassInContext;
 }

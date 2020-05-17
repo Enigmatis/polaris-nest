@@ -4,6 +4,6 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     testMatch: ['**/*.test.ts'],
-    testTimeout: 150000,
+    testTimeout: 15000000,
     coverageDirectory: './coverage/',
 };

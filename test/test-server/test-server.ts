@@ -10,7 +10,7 @@ export async function startTestServer(): Promise<void> {
     for (let connection of manager.connections) {
       await connection.close();
     }
-    Object.assign(manager, {connections:[]});
+    Object.assign(manager, { connections: [] });
   }
   await graphQLRequest(initData.request, initData.headers);
 }
