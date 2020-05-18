@@ -35,7 +35,6 @@ export class BookResolver {
   }
   @Subscription(() => BookApi.Book)
   bookUpdated() {
-    console.log("registered!!!!!!!!!!!!!!!!!")
     return this.bookService.registerToBookUpdates();
   }
 }
