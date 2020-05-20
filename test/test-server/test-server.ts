@@ -19,6 +19,13 @@ export async function startTestServer(): Promise<void> {
 }
 
 export async function stopTestServer(): Promise<void> {
+  if (getPolarisConnectionManager().connections.length > 0) {
+    let manager = getPolarisConnectionManager();
+    for (let connection of manager.connections) {
+      await connection.close();
+    }
+    Object.assign(manager, { connections: [] });
+  }
   await app.close();
 }
 

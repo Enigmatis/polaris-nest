@@ -2,7 +2,7 @@ import { Field, ID, InterfaceType } from "@nestjs/graphql";
 
 @InterfaceType()
 export abstract class RepositoryEntity {
-  @Field((type) => ID)
+  @Field(() => ID)
   id: string;
 
   @Field({ nullable: true })

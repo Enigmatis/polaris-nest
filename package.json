@@ -1,8 +1,8 @@
 {
-  "name": "polaris-core-with-nest",
-  "version": "1.0.0",
+  "name": "@enigmatis/polaris-nest",
+  "version": "1.0.1",
   "description": "Nest TypeScript starter repository",
-  "license": "MIT",
+  "license": "ISC",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -16,8 +16,49 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "echo 'No e2e tests implemented yet.'"
+    "test:e2e": "echo 'No e2e tests implemented yet.'",
+    "semantic-release": "semantic-release",
+    "prepare": "npm run lint && npm run build"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": true
+        }
+      ],
+      "@semantic-release/github"
+    ],
+    "prepare": [
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      {
+        "path": "@semantic-release/git",
+        "assets": [
+          "package.json",
+          "package-lock.json",
+          "CHANGELOG.md"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ]
+  },
+  "author": "enigmatis",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Enigmatis/polaris-nest.git"
+  },
+  "keywords": [
+    "polaris",
+    "graphql",
+    "typescript"
+  ],
   "dependencies": {
     "@enigmatis/polaris-core": "2.0.0-beta.18",
     "apollo-server-plugin-base": "^0.8.0",
@@ -34,6 +75,10 @@
     "uuid": "^3.4.0"
   },
   "devDependencies": {
+    "@nestjs/cli": "7.0.2",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "semantic-release": "^17.0.4",
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-angular": "8.3.4",
     "graphql-request": "^1.8.2",
