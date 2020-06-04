@@ -306,7 +306,8 @@ export class GraphQLModule implements OnModuleInit {
       logger,
       config,
       this.apolloServer as ApolloServer,
-      apolloOptions.schema
+      apolloOptions.schema,
+      config.connectionManager
     );
     if (this.options.installSubscriptionHandlers) {
       this.apolloServer.installSubscriptionHandlers(

@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
+import { EntitiesMetadataStorage } from "@nestjs/typeorm/dist/entities-metadata.storage";
 
 @Injectable()
 export class TypeOrmOptionsFactoryService implements TypeOrmOptionsFactory {
@@ -9,6 +10,9 @@ export class TypeOrmOptionsFactoryService implements TypeOrmOptionsFactory {
       type: "postgres",
       url: process.env.CONNECTION_STRING,
       schema: process.env.SCHEMA_NAME,
+      entities: EntitiesMetadataStorage.getEntitiesByConnection(
+        connectionName || "default"
+      ),
       dropSchema: true,
       autoLoadEntities: true,
       synchronize: true,

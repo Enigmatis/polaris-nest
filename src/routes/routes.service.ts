@@ -4,7 +4,6 @@ import {
   ApplicationProperties,
   getConnectionForReality,
   REALITY_ID,
-  getPolarisConnectionManager,
   SnapshotPage,
 } from "@enigmatis/polaris-core";
 import * as express from "express";
@@ -33,8 +32,8 @@ export class RoutesService {
     const realityId: number = realityHeader ? +realityHeader : 0;
     const snapshotRepository = getConnectionForReality(
       realityId,
-      this.config.getPolarisServerConfig().supportedRealities,
-      getPolarisConnectionManager()
+      this.config.getPolarisServerConfig().supportedRealities as any,
+      this.config.getPolarisServerConfig().connectionManager
     ).getRepository(SnapshotPage);
     const result = await snapshotRepository.findOne({} as any, id);
     res.send(result?.getData());

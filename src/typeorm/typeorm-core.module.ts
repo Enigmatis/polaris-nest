@@ -22,9 +22,9 @@ import {
 } from "@nestjs/typeorm";
 import {
   createPolarisConnection,
-  getPolarisConnectionManager,
   PolarisConnection,
-} from "@enigmatis/polaris-typeorm";
+  PolarisConnectionManager,
+} from "@enigmatis/polaris-core";
 import { PolarisLogger } from "@enigmatis/polaris-logs";
 import { PolarisLoggerService } from "../polaris-logger/polaris-logger.service";
 import {
@@ -33,6 +33,32 @@ import {
   TYPEORM_MODULE_OPTIONS,
 } from "@nestjs/typeorm/dist/typeorm.constants";
 import { EntitiesMetadataStorage } from "@nestjs/typeorm/dist/entities-metadata.storage";
+import { PolarisServerConfigService } from "../polaris-server-config/polaris-server-config.service";
+
+export type PolarisTypeOrmModuleOptions = {
+  /**
+   * Number of times to retry connecting
+   * Default: 10
+   */
+  retryAttempts?: number;
+  /**
+   * Delay between connection retry attempts (ms)
+   * Default: 3000
+   */
+  retryDelay?: number;
+  /**
+   * If `true`, entities will be loaded automatically.
+   */
+  autoLoadEntities?: boolean;
+  /**
+   * If `true`, connection will not be closed on application shutdown.
+   */
+  keepConnectionAlive?: boolean;
+
+  connectionManager: PolarisConnectionManager;
+
+  logger: PolarisLogger;
+} & Partial<ConnectionOptions>;
 
 @Global()
 @Module({})
@@ -43,7 +69,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     private readonly moduleRef: ModuleRef
   ) {}
 
-  static forRoot(options: TypeOrmModuleOptions = {}): DynamicModule {
+  static forRoot(options: PolarisTypeOrmModuleOptions): DynamicModule {
     const typeOrmModuleOptions = {
       provide: TYPEORM_MODULE_OPTIONS,
       useValue: options,
@@ -51,7 +77,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     const connectionProvider = {
       provide: getConnectionToken(options as ConnectionOptions) as string,
       useFactory: async () =>
-        await this.createConnectionFactory(options, {} as any),
+        await this.createConnectionFactory(options, options.connectionManager, options.logger),
     };
     const entityManagerProvider = this.createEntityManagerProvider(
       options as ConnectionOptions
@@ -72,7 +98,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       provide: getConnectionToken(options as ConnectionOptions) as string,
       useFactory: async (
         typeOrmOptions: TypeOrmModuleOptions,
-        polarisLoggerService: PolarisLoggerService
+        polarisServerConfigService: PolarisServerConfigService
       ) => {
         if (options.name) {
           return await this.createConnectionFactory(
@@ -80,12 +106,18 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
               ...typeOrmOptions,
               name: options.name,
             },
-            polarisLoggerService.getPolarisLogger()
+              polarisServerConfigService.getPolarisServerConfig()
+                  .connectionManager,
+              polarisServerConfigService.getPolarisServerConfig()
+                  .logger as PolarisLogger
           );
         }
         return await this.createConnectionFactory(
           typeOrmOptions,
-          polarisLoggerService.getPolarisLogger()
+            polarisServerConfigService.getPolarisServerConfig()
+                .connectionManager,
+          polarisServerConfigService.getPolarisServerConfig()
+            .logger as PolarisLogger
         );
       },
       inject: [TYPEORM_MODULE_OPTIONS, ...options.inject],
@@ -175,12 +207,12 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
 
   private static async createConnectionFactory(
     options: TypeOrmModuleOptions,
+    manager: PolarisConnectionManager,
     polarisLogger: PolarisLogger
   ): Promise<PolarisConnection> {
     try {
       if (options.keepConnectionAlive) {
         const connectionName = getConnectionName(options as ConnectionOptions);
-        const manager = getPolarisConnectionManager();
         if (manager.has(connectionName)) {
           const connection = manager.get(connectionName);
           if (connection.isConnected) {
