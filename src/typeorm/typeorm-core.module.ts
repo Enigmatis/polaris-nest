@@ -26,7 +26,6 @@ import {
   PolarisConnectionManager,
 } from "@enigmatis/polaris-core";
 import { PolarisLogger } from "@enigmatis/polaris-logs";
-import { PolarisLoggerService } from "../polaris-logger/polaris-logger.service";
 import {
   DEFAULT_CONNECTION_NAME,
   TYPEORM_MODULE_ID,
@@ -77,7 +76,11 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     const connectionProvider = {
       provide: getConnectionToken(options as ConnectionOptions) as string,
       useFactory: async () =>
-        await this.createConnectionFactory(options, options.connectionManager, options.logger),
+        await this.createConnectionFactory(
+          options,
+          options.connectionManager,
+          options.logger
+        ),
     };
     const entityManagerProvider = this.createEntityManagerProvider(
       options as ConnectionOptions
@@ -95,7 +98,9 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
 
   static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
     const connectionProvider = {
-      provide: getConnectionToken(options as ConnectionOptions) as string,
+      provide: getConnectionToken(
+        (options as unknown) as ConnectionOptions
+      ) as string,
       useFactory: async (
         typeOrmOptions: TypeOrmModuleOptions,
         polarisServerConfigService: PolarisServerConfigService
@@ -106,16 +111,15 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
               ...typeOrmOptions,
               name: options.name,
             },
-              polarisServerConfigService.getPolarisServerConfig()
-                  .connectionManager,
-              polarisServerConfigService.getPolarisServerConfig()
-                  .logger as PolarisLogger
+            polarisServerConfigService.getPolarisServerConfig()
+              .connectionManager,
+            polarisServerConfigService.getPolarisServerConfig()
+              .logger as PolarisLogger
           );
         }
         return await this.createConnectionFactory(
           typeOrmOptions,
-            polarisServerConfigService.getPolarisServerConfig()
-                .connectionManager,
+          polarisServerConfigService.getPolarisServerConfig().connectionManager,
           polarisServerConfigService.getPolarisServerConfig()
             .logger as PolarisLogger
         );
@@ -123,9 +127,11 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       inject: [TYPEORM_MODULE_OPTIONS, ...options.inject],
     };
     const entityManagerProvider = {
-      provide: getEntityManagerToken(options as ConnectionOptions) as string,
+      provide: getEntityManagerToken(
+        (options as unknown) as ConnectionOptions
+      ) as string,
       useFactory: (connection: PolarisConnection) => connection.manager,
-      inject: [getConnectionToken(options as ConnectionOptions)],
+      inject: [getConnectionToken((options as unknown) as ConnectionOptions)],
     };
 
     const asyncProviders = this.createAsyncProviders(options);
