@@ -27,15 +27,7 @@ export const createOptions: () => PolarisServerOptions = () => {
     supportedRealities: new RealitiesHolder(
       new Map([[3, { id: 3, type: "notreal3", name: "default" }]])
     ),
-    connectionManager: {
-      connections: [getPolarisConnectionManager().get()],
-      has: (name: string) => {
-        return name === "default";
-      },
-      get: (name: string) => {
-        return getPolarisConnectionManager().get(name);
-      },
-    } as any, // getPolarisConnectionManager(),
+    connectionManager:  getPolarisConnectionManager(),
     customContext: (context: ExpressContext): Partial<TestContext> => {
       const { req, connection } = context;
       const headers = req ? req.headers : connection?.context;

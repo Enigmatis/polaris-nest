@@ -10,13 +10,14 @@ import {
   createPolarisContext,
   createPolarisPlugins,
   createPolarisSchemaWithMiddlewares,
-  PolarisServerConfig
+  PolarisServerConfig,
 } from "@enigmatis/polaris-core";
 import { PolarisGraphQLLogger } from "@enigmatis/polaris-graphql-logger";
 import { SubscriptionServerOptions } from "apollo-server-core/src/types";
 import { PlaygroundConfig } from "apollo-server";
 import { PolarisServerConfigService } from "../polaris-server-config/polaris-server-config.service";
 import { Injectable } from "@nestjs/common";
+import { GraphQLSchema } from "graphql";
 
 @Injectable()
 export class GqlOptionsFactoryService implements GqlOptionsFactory {
@@ -52,7 +53,7 @@ export class GqlOptionsFactoryService implements GqlOptionsFactory {
       subscriptions,
       introspection,
       formatError: polarisFormatError,
-      transformSchema: (schema: any) => {
+      transformSchema: (schema: GraphQLSchema) => {
         return createPolarisSchemaWithMiddlewares(
           schema,
           logger as any,

@@ -1,25 +1,21 @@
 import { Injectable } from "@nestjs/common";
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
-import { EntitiesMetadataStorage } from "@nestjs/typeorm/dist/entities-metadata.storage";
 
 @Injectable()
 export class TypeOrmOptionsFactoryService implements TypeOrmOptionsFactory {
   createTypeOrmOptions(connectionName?: string): TypeOrmModuleOptions {
-    const options: TypeOrmModuleOptions = {
+    return {
       name: connectionName,
       type: "postgres",
       url: process.env.CONNECTION_STRING,
       schema: process.env.SCHEMA_NAME,
-      entities: EntitiesMetadataStorage.getEntitiesByConnection(
-        connectionName || "default"
-      ),
+      entities: [__dirname + "/../dal/models/*.{ts,js}"],
       dropSchema: true,
       autoLoadEntities: true,
       synchronize: true,
       logging: true,
       keepConnectionAlive: true,
     };
-    return options;
   }
 }
 
