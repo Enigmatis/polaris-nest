@@ -13,6 +13,7 @@ import { PolarisModuleAsyncOptions } from "../common/polaris-module-options";
 import { Type } from "@nestjs/common/interfaces/type.interface";
 import { ForwardReference } from "@nestjs/common/interfaces/modules/forward-reference.interface";
 import { GraphQLModule } from "../polaris-gql/polaris-gql.module";
+import {DateScalar} from "../schema/date.scalar";
 
 let providers: Provider[] = [
   RoutesService,
@@ -31,14 +32,16 @@ export class PolarisModule {
         RoutesModule,
         GraphQLModule.forRootAsync({
           useClass: GqlOptionsFactoryService,
-          imports: [PolarisServerConfigModule.register(options)],
+          imports: [PolarisServerConfigModule.register(options)]
+          useFactory
         }),
       ],
       providers: [
         { provide: PolarisServerOptionsToken, useValue: options },
         ...providers,
+        DateScalar
       ],
-      exports: [PolarisLoggerModule],
+      exports: [PolarisLoggerModule, DateScalar],
       controllers,
     };
   }
